@@ -7,20 +7,27 @@ $last_name = "";
 $email = "";
 $phone = "";
 $message = "";
+$address = "";
+$city = "";
+$country = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = trim($_POST["first_name"]);
     $last_name = trim($_POST["last_name"]);
     $email = trim($_POST["email"]);
     $phone = trim($_POST["phone"]);
+    $address = trim($_POST["address"]);
+    $city = trim($_POST["city"]);
+    $country = trim($_POST["country"]);
 
     if (!empty($first_name) && !empty($last_name) && !empty($email)) {
         $insert_customer = $db_connection->prepare(
-            "INSERT INTO Customers (first_name, last_name, email, phone)
+            "INSERT INTO Customers (first_name, last_name, email, phone, address, city, country)
              VALUES (?, ?, ?, ?)"
         );
 
-        $insert_customer->bind_param("ssss", $first_name, $last_name, $email, $phone);
+        $insert_customer->bind_param("sssssss", 
+        $first_name, $last_name, $email, $phone, $address, $city, $country);
 
         if ($insert_customer->execute()) {
             $message = "Customer added successfully.";
@@ -67,6 +74,15 @@ $customers = $db_connection->query("SELECT * FROM Customers ORDER BY customer_id
     <label>Phone:</label><br>
     <input type="text" name="phone"><br><br>
 
+    <label>Address:</label><br>
+    <input type="text" name="address"><br><br>
+
+    <label>City:</label><br>
+    <input type="text" name="city"><br><br>
+    
+    <label>Country:</label><br>
+    <input type="text" name="country"><br><br>
+
     <button type="submit">Add Customer</button>
 </form>
 
@@ -80,6 +96,10 @@ $customers = $db_connection->query("SELECT * FROM Customers ORDER BY customer_id
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Created At</th>
         </tr>
     </thead>
 
@@ -91,6 +111,10 @@ $customers = $db_connection->query("SELECT * FROM Customers ORDER BY customer_id
                 <td><?php echo htmlspecialchars($row["last_name"]); ?></td>
                 <td><?php echo htmlspecialchars($row["email"]); ?></td>
                 <td><?php echo htmlspecialchars($row["phone"]); ?></td>
+                <td><?php echo htmlspecialchars($row["address"]); ?></td>
+                <td><?php echo htmlspecialchars($row["city"]); ?></td>
+                <td><?php echo htmlspecialchars($row["country"]); ?></td>
+                <td><?php echo $row["created_at"]; ?></td>
             </tr>
         <?php } ?>
     </tbody>
