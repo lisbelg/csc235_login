@@ -31,7 +31,7 @@ $create_stmt = "CREATE DATABASE IF NOT EXISTS login_db";
 if(mysqli_query($db_connection, $create_stmt)) {
 	echo nl2br("Database was successfully created.\r\n");
 } else {
-	echo "Error dropping database: " . mysqli_error() . nl2br("\r\n");
+	echo "Error dropping database: " . mysqli_error($db_connection) . nl2br("\r\n");
 }
 $prep_stmt = $db_connection -> prepare($create_stmt);
 $prep_stmt->execute();
@@ -94,12 +94,13 @@ $create_contacts->close();
 /* Customers */
 $create_customers = $db_connection->prepare(
   "CREATE OR REPLACE TABLE Customers(
-        customer_id int NOT NULL AUTO_INCREMENT,
-        first_name varchar(255) NOT NULL,
-        last_name varchar(255) NOT NULL,
-        email varchar(255) NOT NULL,
-        phone varchar(255),
-        PRIMARY KEY(customer_id));");
+      customer_id int NOT NULL AUTO_INCREMENT,
+      first_name varchar(255) NOT NULL,
+      last_name varchar(255) NOT NULL,
+      email varchar(255) NOT NULL,
+      phone varchar(255),
+      PRIMARY KEY(customer_id));"
+);
 $create_customers->execute();
 $create_customers->close();
 
@@ -204,35 +205,10 @@ $insert_contacts->execute();
 
 $insert_contacts->close();
 
-/* Users */
-$insert_users = $db_connection->prepare(
-	"INSERT INTO Users
-		(user_id, role_id, contact_id, creation_date) VALUES(?,?,?,?);");
-$insert_users->bind_param("iiis", $user_id, $role_id, $contact_id, $creation_date);
-$user_id = 1;
-$role_id = 1;
-$contact_id = 1;
-$creation_date = date("Y-m-d H:i:s");
-$insert_users->execute();
-
-$user_id = 2;
-$role_id = 2;
-$contact_id = 2;
-$creation_date = date("Y-m-d H:i:s");
-$insert_users->execute();
-
-$user_id = 3;
-$role_id = 3;
-$contact_id = 3;
-$creation_date = date("Y-m-d H:i:s");
-$insert_users->execute();
-
-$insert_users->close();
-
 /* Customers */
 $insert_customers = $db_connection->prepare(
-  "INSERT INTO Customers
-    (customer_id, first_name, last_name, email, phone) VALUES(?,?,?,?,?);");
+	"INSERT INTO Customers
+		(customer_id, first_name, last_name, email, phone) VALUES(?,?,?,?,?);");
 
 $insert_customers->bind_param("issss", $customer_id, $first_name, $last_name, $email, $phone);
 
@@ -258,6 +234,31 @@ $phone = "203-333-3333";
 $insert_customers->execute();
 
 $insert_customers->close();
+
+/* Users */
+$insert_users = $db_connection->prepare(
+	"INSERT INTO Users
+		(user_id, role_id, contact_id, creation_date) VALUES(?,?,?,?);");
+$insert_users->bind_param("iiis", $user_id, $role_id, $contact_id, $creation_date);
+$user_id = 1;
+$role_id = 1;
+$contact_id = 1;
+$creation_date = date("Y-m-d H:i:s");
+$insert_users->execute();
+
+$user_id = 2;
+$role_id = 2;
+$contact_id = 2;
+$creation_date = date("Y-m-d H:i:s");
+$insert_users->execute();
+
+$user_id = 3;
+$role_id = 3;
+$contact_id = 3;
+$creation_date = date("Y-m-d H:i:s");
+$insert_users->execute();
+
+$insert_users->close();
 
 /* Credentials */
 $insert_credentials = $db_connection->prepare(
