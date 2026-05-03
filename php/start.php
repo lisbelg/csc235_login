@@ -95,15 +95,19 @@ $create_contacts->close();
 $create_customers = $db_connection->prepare(
   "CREATE OR REPLACE TABLE Customers(
       customer_id int NOT NULL AUTO_INCREMENT,
-      first_name varchar(255) NOT NULL,
-      last_name varchar(255) NOT NULL,
-      email varchar(255) NOT NULL,
-      phone varchar(255),
-      PRIMARY KEY(customer_id));"
+      first_name varchar(50) NOT NULL,
+      last_name varchar(50) NOT NULL,
+      email varchar(100) NOT NULL UNIQUE,
+      phone varchar(20),
+      address varchar(255),
+      city varchar(100),
+      country varchar(100) NOT NULL DEFAULT 'USA',
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY(customer_id)
+  );"
 );
 $create_customers->execute();
 $create_customers->close();
-
 /* Below Are Tables That Have Foreign Keys */
 /* ------------------------------------------ */
 
@@ -207,16 +211,23 @@ $insert_contacts->close();
 
 /* Customers */
 $insert_customers = $db_connection->prepare(
-	"INSERT INTO Customers
-		(customer_id, first_name, last_name, email, phone) VALUES(?,?,?,?,?);");
+  "INSERT INTO Customers
+    (customer_id, first_name, last_name, email, phone, address, city, country)
+   VALUES(?,?,?,?,?,?,?,?);"
+);
 
-$insert_customers->bind_param("issss", $customer_id, $first_name, $last_name, $email, $phone);
+$insert_customers->bind_param("isssssss", 
+    $customer_id, $first_name, $last_name, $email, $phone, $address, $city, $country
+);
 
 $customer_id = 1;
 $first_name = "Emily";
 $last_name = "Johnson";
 $email = "emily@example.com";
 $phone = "203-111-1111";
+$address = "123 Main St";
+$city = "New Haven";
+$country = "USA";
 $insert_customers->execute();
 
 $customer_id = 2;
@@ -224,6 +235,9 @@ $first_name = "Daniel";
 $last_name = "Lopez";
 $email = "daniel@example.com";
 $phone = "203-222-2222";
+$address = "456 Elm St";
+$city = "Bridgeport";
+$country = "USA";
 $insert_customers->execute();
 
 $customer_id = 3;
@@ -231,6 +245,9 @@ $first_name = "Sophia";
 $last_name = "Martinez";
 $email = "sophia@example.com";
 $phone = "203-333-3333";
+$address = "789 Oak St";
+$city = "Hartford";
+$country = "USA";
 $insert_customers->execute();
 
 $insert_customers->close();
