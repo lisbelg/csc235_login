@@ -91,6 +91,17 @@ $create_contacts = $db_connection->prepare(
 $create_contacts->execute();
 $create_contacts->close();
 
+/* Customers */
+$create_customers = $db_connection->prepare(
+	"CREATE OR REPLACE TABLE Customers(
+        customer_id int NOT NULL AUTO_INCREMENT,
+        first_name varchar(255) NOT NULL,
+        last_name varchar(255) NOT NULL,
+        email varchar(255) NOT NULL,
+        phone varchar(255),
+        PRIMARY KEY(customer_id));");
+$create_customers->execute();
+$create_customers->close();
 /* Below Are Tables That Have Foreign Keys */
 /* ------------------------------------------ */
 
@@ -191,6 +202,36 @@ $updated = date("Y-m-d H:i:s");
 $insert_contacts->execute();
 
 $insert_contacts->close();
+
+/* Customers */
+$insert_customers = $db_connection->prepare(
+	"INSERT INTO Customers
+		(customer_id, first_name, last_name, email, phone) VALUES(?,?,?,?,?);");
+
+$insert_customers->bind_param("issss", $customer_id, $first_name, $last_name, $email, $phone);
+
+$customer_id = 1;
+$first_name = "Emily";
+$last_name = "Johnson";
+$email = "emily@example.com";
+$phone = "203-111-1111";
+$insert_customers->execute();
+
+$customer_id = 2;
+$first_name = "Daniel";
+$last_name = "Lopez";
+$email = "daniel@example.com";
+$phone = "203-222-2222";
+$insert_customers->execute();
+
+$customer_id = 3;
+$first_name = "Sophia";
+$last_name = "Martinez";
+$email = "sophia@example.com";
+$phone = "203-333-3333";
+$insert_customers->execute();
+
+$insert_customers->close();
 
 /* Users */
 $insert_users = $db_connection->prepare(
