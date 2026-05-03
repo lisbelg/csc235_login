@@ -1,5 +1,6 @@
 <?php
-require_once("../php/config.php");
+define('ROOT_PATH', dirname(__DIR__));
+require_once(ROOT_PATH . "/php/config.php");
 
 $first_name = "";
 $last_name = "";
@@ -14,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = trim($_POST["phone"]);
 
     if (!empty($first_name) && !empty($last_name) && !empty($email)) {
-        $insert_customer = $db->prepare(
+        $insert_customer = $db_connection->prepare(
             "INSERT INTO Customers (first_name, last_name, email, phone)
              VALUES (?, ?, ?, ?)"
         );
@@ -33,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$customers = $db->query("SELECT * FROM Customers ORDER BY customer_id ASC");
+$customers = $db_connection->query("SELECT * FROM Customers ORDER BY customer_id ASC");
 ?>
 
 <!DOCTYPE html>
@@ -99,5 +100,5 @@ $customers = $db->query("SELECT * FROM Customers ORDER BY customer_id ASC");
 </html>
 
 <?php
-$db->close();
+$db_connection->close();
 ?>
