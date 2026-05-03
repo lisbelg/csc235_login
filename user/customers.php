@@ -22,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($first_name) && !empty($last_name) && !empty($email)) {
         $insert_customer = $db_connection->prepare(
-            "INSERT INTO Customers (first_name, last_name, email, phone, address, city, country)
-             VALUES (?, ?, ?, ?)"
+        "INSERT INTO Customers (first_name, last_name, email, phone, address, city, country)
+        VALUES (?, ?, ?, ?, ?, ?, ?)"
         );
 
         $insert_customer->bind_param("sssssss", 
@@ -124,5 +124,7 @@ $customers = $db_connection->query("SELECT * FROM Customers ORDER BY customer_id
 </html>
 
 <?php
+
 $db_connection->close();
+
 ?>
